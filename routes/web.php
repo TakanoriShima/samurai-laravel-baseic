@@ -10,7 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/',    'PostController@index');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('posts', 'PostController');
+if (env('APP_ENV') === 'local') {
+  URL::forceScheme('https');
+} 
+
