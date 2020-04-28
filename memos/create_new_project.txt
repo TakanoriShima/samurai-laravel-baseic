@@ -1,0 +1,29 @@
+# PHP 7.2
+# Laravel 5.8(Laravel Installer 1.5.0)
+
+php -v
+# PHP 7.2.28 (cli) (built: Mar  3 2020 18:09:18) ( NTS )
+# Copyright (c) 1997-2018 The PHP Group
+# Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+
+laravel -V
+# Laravel Installer 1.5.0
+
+
+
+composer create-project --prefer-dist laravel/laravel simpleboard "5.8.*"
+# error
+
+sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+sudo /sbin/mkswap /var/swap.1
+sudo /sbin/swapon /var/swap.1
+
+composer create-project --prefer-dist laravel/laravel simpleboard "5.8.*"
+
+cd simpleboard
+
+git init
+git add .
+git commit -m "init"
+
+php artisan serve --port=8080

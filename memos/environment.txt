@@ -1,0 +1,20 @@
+sudo yum -y update
+sudo yum -y install php72 php72-mbstring php72-pdo
+sudo unlink /usr/bin/php
+sudo ln -s /etc/alternatives/php7 /usr/bin/php
+php --version
+# Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+composer -V
+# Composer version 1.10.1 2020-03-13 20:34:27
+
+composer global require laravel/installer=1.5.0
+
+export PATH="$PATH:$HOME/.composer/vendor/bin"
+
+exec bash
+
+laravel --version
+# Laravel Installer 1.5.0

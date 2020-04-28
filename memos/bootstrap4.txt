@@ -1,0 +1,291 @@
+# resources/views/layouts/layouts.blade.php
+
+<html>
+    <head>
+        <title>@yield('title')</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            @yield('content')
+        </div>
+
+         <script src="{{ asset('js/app.js') }}"></script>
+    </body>
+</html> 
+
+# resources/views/posts/index.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+
+    @if (session('message'))
+        {{ session('message') }}
+    @endif
+
+    <h1>Posts</h1>
+
+    @foreach($posts as $post)
+        <a href="/posts/{{ $post->id }}">{{ $post->title }}</a>
+        <a href="/posts/{{ $post->id }}/edit">Edit</a>
+
+        <form action="/posts/{{ $post->id }}" method="POST" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit">Delete</button>
+        </form>
+    @endforeach
+
+    <a href="/posts/create">New Post</a> 
+@endsection
+
+# resources/views/posts/create.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+    <form method="POST" action="/posts">
+        {{ csrf_field() }}
+        <input type="text" name="title">
+        <input type="text" name="content">
+        <input type="submit">
+    </form>
+@endsection
+
+# resources/views/posts/show.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+    @if (session('message'))
+        {{ session('message') }}
+    @endif
+
+    {{ $post->title }}
+    {{ $post->content }}
+@endsection 
+
+# resources/views/posts/edit.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+    <form method="POST" action="/posts/{{ $post->id }}">
+        {{ csrf_field() }}
+        <input type="hidden" name="_method" value="PUT">
+        <input type="text" name="title" value="{{ $post->title }}">
+        <input type="text" name="content" value="{{ $post->content }}">
+        <input type="submit">
+    </form> 
+@endsection
+
+# resources/views/layouts/layouts.blade.php
+<html>
+    <head>
+        <title>@yield('title')</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        @component('components.header')
+        @endcomponent
+        <div class="container">
+            @yield('content')
+        </div>
+
+        <script src="{{ asset('js/app.js') }}"></script>
+    </body>
+</html>
+
+# resources/views/components/header.blade.php
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Simple Board</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+# resources/views/layouts/layouts.blade.php
+<html>
+    <head>
+        <title>@yield('title')</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        @component('components.header')
+        @endcomponent
+        <div class="container">
+            @yield('content')
+        </div>
+
+        @component('components.footer')
+        @endcomponent
+
+        <script src="{{ asset('js/app.js') }}"></script>
+    </body>
+</html> 
+
+# resources/views/components/footer.blade.php
+<footer class="py-3 bg-light">
+    <div class="container">
+        <span class="text-muted small">Simple Board by Laravel & Bootstrap 4</span>
+    </div>
+</footer>
+
+# resources/views/posts/index.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+
+    @if (session('message'))
+        {{ session('message') }}
+    @endif
+
+    <h1>Posts</h1>
+
+    @foreach($posts as $post)
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ $post->title }}</h5>
+                <p class="card-text">{{ $post->content }}</p>
+
+                <div class="d-flex" style="height: 36.4px;">
+                    <a href="/posts/{{ $post->id }}" class="btn btn-outline-primary">Show</a>
+                    <a href="/posts/{{ $post->id }}/edit" class="btn btn-outline-primary">Edit</a>
+                    <form action="/posts/{{ $post->id }}" method="POST" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    <a href="/posts/create">New Post</a>
+@endsection
+
+# resources/views/posts/show.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+
+    @if (session('message'))
+        {{ session('message') }}
+    @endif
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ $post->title }}</h5>
+            <p class="card-text">{{ $post->content }}</p>
+
+            <div class="d-flex" style="height: 36.4px;">
+                <button class="btn btn-outline-primary">Show</button>
+                <a href="/posts/{{ $post->id }}/edit" class="btn btn-outline-primary">Edit</a>
+                <form action="/posts/{{ $post->id }}" method="POST" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <a href="/posts/{{ $post->id }}/edit">Edit</a> | 
+    <a href="/posts">Back</a>
+
+@endsection
+
+# resources/views/posts/edit.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+
+<h1>Editing Post</h1>
+
+<form method="POST" action="/posts/{{ $post->id }}">
+    {{ csrf_field() }}
+    <input type="hidden" name="_method" value="PUT">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Title</label>
+        <input type="text" class="form-control" aria-describedby="emailHelp" name="title" value="{{ $post->title }}">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Content</label>
+        <textarea class="form-control" name="content">{{ $post->content }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Submit</button>
+</form>
+
+<a href="/posts/{{ $post->id }}">Show</a> | 
+<a href="/posts">Back</a>
+
+@endsection
+
+# resources/views/posts/create.blade.php
+@extends('layouts.layouts')
+
+@section('title', 'Simple Board')
+
+@section('content')
+
+<h1>New Post</h1>
+
+<form method="POST" action="/posts">
+    {{ csrf_field() }}
+    <div class="form-group">
+        <label for="exampleInputEmail1">Title</label>
+        <input type="text" class="form-control" aria-describedby="emailHelp" name="title">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Content</label>
+        <textarea class="form-control" name="content"></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Submit</button>
+</form>
+
+<a href="/posts">Back</a>
+
+@endsection

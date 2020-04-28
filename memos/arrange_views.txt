@@ -1,0 +1,25 @@
+# routes/web.php
+# Route::get('/', 'PostController@index');
+
+# resources/views/components/header.blade.php
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+
+# resources/views/layouts/layouts.blade.php
+@endcomponent
+-        <div class="container">
++        <div class="container pt-5 pb-5">
+            @yield('content')
+        </div>
+        
+
+# resources/views/components/flash.blade.php
+@if (session('message'))
+    {{ session('message') }}
+@endif
+
+# resources/views/layouts/layouts.blade.php
+<div class="container pt-5 pb-5">
++            @component('components.flash')
++            @endcomponent
+            @yield('content')
+        </div>
