@@ -1,0 +1,38 @@
+curl -OL https://cli-assets.heroku.com/heroku-linux-x64.tar.gz && tar zxf heroku-linux-x64.tar.gz && rm -f heroku-linux-x64.tar.gz && sudo mv heroku /usr/local && echo 'PATH=/usr/local/heroku/bin:$PATH' >> $HOME/.bash_profile
+source ~/.bash_profile
+heroku login -i
+
+git remote remove heroku
+heroku create oono-shimpleboard
+
+echo "web: vendor/bin/heroku-php-apache2 public/" > Procfile
+
+git add .
+git commit -m 'for Heroku'
+
+git push heroku master
+
+heroku config:set APP_KEY=$(php artisan --no-ansi key:generate --show)
+
+# Setting APP_KEY and restarting ⬢ shima-shimpleboard... done, v4
+# APP_KEY: base64:H0hEQGLF3c6WYpWS8n32T5HUyStY63sV5uo+57SwwP4=
+
+heroku addons:create heroku-postgresql:hobby-dev
+
+heroku config:get DATABASE_URL
+
+# postgres://gzsqyvlthmgoxm:9607686126ca53a1c5fc8315947779241fbf9da59334bef3bd7102861f632a0e@ec2-23-20-129-146.compute-1.amazonaws.com:5432/d9subb17ftf069
+
+# postgres://<ユーザー>:<パスワード>@<ホスト>:<ポート>/<データベース名>
+# postgres://ユーザ名:パスワード@ホスト名:5432/データベース名
+
+# heroku config:set DB_CONNECTION=pgsql
+# heroku config:set DB_DATABASE=<データベース名>
+# heroku config:set DB_HOST=<ホスト>
+# heroku config:set DB_PASSWORD=<パスワード>
+# heroku config:set DB_PORT=<ポート>
+# heroku config:set DB_USERNAME=<ユーザー>
+
+heroku config:set DB_CONNECTION=pgsql DB_USERNAME=gzsqyvlthmgoxm DB_PASSWORD=9607686126ca53a1c5fc8315947779241fbf9da59334bef3bd7102861f632a0e DB_HOST=ec2-23-20-129-146.compute-1.amazonaws.com DB_DATABASE=d9subb17ftf069
+
+heroku run php artisan migrate
